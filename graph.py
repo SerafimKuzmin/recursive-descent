@@ -39,11 +39,11 @@ def bracket(ind):
 
 
 
-def plus(ind):
+def plus(l, r):
     res = 0
-    a = bracket(ind)
+    a = bracket(l)
     res += a[0]
-    ind += a[1]
+    l += a[1]
     while l < r:
         if lex(l) == "plus":
             a = bracket(l + 1)
@@ -56,10 +56,11 @@ def plus(ind):
     return res
 
 
-def calc(formula):
+def calc(fr):
     global formula
-    return plus(0)
+    formula = fr
+    return plus(0, len(formula))
 
 
-formula = input()
-print(calc(0, len(formula)))
+fr = input()
+print(calc(fr))
