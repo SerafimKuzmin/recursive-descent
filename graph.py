@@ -6,11 +6,11 @@ class Sign(Enum):
     plus = 2
     mul = 3
     div = 4
-    exp = 5
+    pw = 5
     last = 6
     op = 7
     cl = 8
-    count = 9
+    number = 9
 
 
 def digit():
@@ -22,21 +22,21 @@ def digit():
     return 0
 
 
-def cnt():
+def str_to_number():
     global ind
     res = ""
     if formula[ind] == "-":
         ind += 1
         res += "-"
-    while ind < len(formula) and (formula[ind].isdigit() or formula[ind] == "."):
+    while formula[ind] != "$" and (formula[ind].isdigit() or formula[ind] == "."):
         res += formula[ind]
         ind += 1
     return float(res)
 
 
-def lex():
+def get_lexem():
     global ind
-    if ind >= len(formula):
+    if ind == "$":
         return Sign.last
     if formula[ind] == "+":
         return Sign.plus
@@ -51,36 +51,36 @@ def lex():
     elif formula[ind] == "/":
         return Sign.div
     elif formula[ind] == "^":
-        return Sign.exp
+        return Sign.pw
     else:
-        return Sign.count
+        return Sign.number
 
 
 
-def bracket():
+def element():
     global ind
-    if lex() == Sign.op:
+    if get_lexem() == Sign.op:
         ind += 1
         res = addition()
         ind += 1
         return res
     else:
-        return cnt()
+        return str_to_number()
 
 def exponentiation():
     global ind
-    res = bracket()
-    while lex() == Sign.exp:
+    res = element()
+    while get_lexem() == Sign.pw:
         ind += 1
-        res **= bracket()
+        res **= exponentiation()
     return res
 
 
 def multiplication():
     global ind
     res = exponentiation()
-    while lex() == Sign.mul or lex() == Sign.div:
-        if lex() == Sign.mul:
+    while get_lexem() == Sign.mul or get_lexem() == Sign.div:
+        if get_lexem() == Sign.mul:
             ind += 1
             res *= multiplication()
         else:
@@ -92,8 +92,8 @@ def multiplication():
 def addition():
     global ind
     res = multiplication()
-    while lex() == Sign.plus or lex() == Sign.minus:
-        if lex() == Sign.plus:
+    while get_lexem() == Sign.plus or get_lexem() == Sign.minus:
+        if get_lexem() == Sign.plus:
             ind += 1
             res += multiplication()
         else:
@@ -106,6 +106,7 @@ def calc(fr):
     global formula, ind 
     ind = 0
     formula = fr
+    formula += "$"
     return addition()
 
 
