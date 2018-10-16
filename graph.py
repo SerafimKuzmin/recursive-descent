@@ -14,8 +14,8 @@ class Sign(Enum):
 
 
 class Calculator:
-    def __init__(self, fr):
-        self.formula = fr
+    def __init__(self):
+        self.formula = ""
         self.ind = 0
 
         
@@ -101,11 +101,12 @@ class Calculator:
         return res
 
 
-    def calc(self):
+    def calc(self, fr):
+        self.formula = fr
         self.formula += "$"
         return self.addition()
 
 
 fr = input()
-clcltr = Calculator(fr)
-print(clcltr.calc())
+clcltr = Calculator()
+print(clcltr.calc(fr))
