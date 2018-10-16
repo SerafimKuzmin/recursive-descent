@@ -104,6 +104,7 @@ class Calculator:
     def calc(self, fr):
         self.formula = fr
         self.formula += "$"
+        self.ind = 0
         return self.addition()
 
 
