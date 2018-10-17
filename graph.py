@@ -11,10 +11,12 @@ class Sign(Enum):
     op = 7
     cl = 8
     number = 9
+    variable = 10
 
 
 class Calculator:
     def __init__(self):
+        self.variables = dict()
         self.formula = ""
         self.ind = 0
 
@@ -37,6 +39,14 @@ class Calculator:
             self.ind += 1
         return float(res)
 
+
+    def variable_value(self):
+        name = ""
+        while self.formula[self.ind].isdigit() or self.formula[self.ind].isalpha():
+            name +=  self.formula[self.ind]
+            self.ind += 1
+        return self.variables[name]
+    
     
     def get_lexem(self):
         if self.ind == "$":
@@ -55,6 +65,8 @@ class Calculator:
             return Sign.div
         elif self.formula[self.ind] == "^":
             return Sign.pw
+        elif self.formula[self.ind] == "x" or self.formula[self.ind] == "y":
+            return Sign.variable
         else:
             return Sign.number
 
@@ -65,6 +77,8 @@ class Calculator:
             res = self.addition()
             self.ind += 1
             return res
+        elif self.get_lexem() == Sign.variable:
+            return self.variable_value()
         else:
             return self.str_to_number()
 
@@ -101,13 +115,20 @@ class Calculator:
         return res
 
 
-    def calc(self, fr):
+    def calc(self, fr, dictionary = {}):
+        self.variables = dictionary
         self.formula = fr
         self.formula += "$"
         self.ind = 0
         return self.addition()
 
 
-fr = input()
 clcltr = Calculator()
-print(clcltr.calc(fr))
+while 1:
+    fr = input()
+    n = int(input("How many variables?\n"))
+    d = dict()
+    for i in range(n):
+        name, value = input().split(" = ")
+        d[name] = float(value)
+    print(clcltr.calc(fr, d))
