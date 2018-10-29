@@ -43,7 +43,7 @@ class Calculator:
     def variable_value(self):
         name = ""
         while self.formula[self.ind].isdigit() or self.formula[self.ind].isalpha():
-            name +=  self.formula[self.ind]
+            name += self.formula[self.ind]
             self.ind += 1
         return self.variables[name]
     
@@ -115,8 +115,22 @@ class Calculator:
         return res
 
 
-    def calc(self, fr, dictionary = {}):
-        self.variables = dictionary
+    def calc(self, fr):
+        flag = 0
+        self.formula = fr
+        self.formula += "$"
+        self.ind = 0
+        for i in range(len(fr)):
+            self.ind = i
+            if self.get_lexem() == Sign.variable:
+                flag = 1
+        d = dict()
+        if flag:
+            n = int(input("How many variables?\n"))
+            for i in range(n):
+                name, f = input().split(" = ")
+                d[name] = float(self.calc(f))
+        self.variables = d
         self.formula = fr
         self.formula += "$"
         self.ind = 0
@@ -126,9 +140,4 @@ class Calculator:
 clcltr = Calculator()
 while 1:
     fr = input()
-    n = int(input("How many variables?\n"))
-    d = dict()
-    for i in range(n):
-        name, value = input().split(" = ")
-        d[name] = float(value)
-    print(clcltr.calc(fr, d))
+    print(clcltr.calc(fr))
