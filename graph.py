@@ -110,11 +110,6 @@ class Calculator:
             res = self.addition()
             self.ind += 1
             return math.degrees(math.atan(1 / res))
-        elif name == "tg":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
-            return math.tan(math.radians(res))
         elif name == "log2":
             self.ind += 1
             res = self.addition()
