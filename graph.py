@@ -14,11 +14,6 @@ class Sign(Enum):
     number = 9
     variable = 10
     function = 11
-    sin = 12
-    cos = 13
-    tg = 14
-    ctg = 15
-    log = 16
 
 
 class Calculator:
