@@ -1,4 +1,5 @@
 from enum import Enum
+import math
 
 
 class Sign(Enum):
@@ -12,6 +13,12 @@ class Sign(Enum):
     cl = 8
     number = 9
     variable = 10
+    function = 11
+    sin = 12
+    cos = 13
+    tg = 14
+    ctg = 15
+    log = 16
 
 
 class Calculator:
@@ -47,6 +54,92 @@ class Calculator:
             self.ind += 1
         return self.variables[name]
     
+
+    def func(self):
+        name = ""
+        while self.get_lexem() != Sign.op:
+            name += self.formula[self.ind]
+            self.ind += 1
+        if name == "sin":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.sin(math.radians(res))
+        elif name == "cos":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.cos(math.radians(res))
+        elif name == "tg":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.tan(math.radians(res))
+        elif name == "ctg":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return 1 / math.tan(math.radians(res))
+        elif name == "sec":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return 1 / math.sin(math.radians(res))
+        elif name == "cosec":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return 1 / math.cos(math.radians(res))
+        elif name == "arcsin":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.degrees(math.asin(res))
+        elif name == "arccos":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.degrees(math.acos(res))
+        elif name == "arctg":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.degrees(math.atan(res))
+        elif name == "arcctg":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.degrees(math.atan(1 / res))
+        elif name == "tg":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.tan(math.radians(res))
+        elif name == "log2":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.log2(res)
+        elif name == "log10":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.log10(res)
+        elif name == "loge":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.log1p(res - 1)
+        elif name == "exp":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.exp(res)
+        elif name == "sqrt":
+            self.ind += 1
+            res = self.addition()
+            self.ind += 1
+            return math.sqrt(res)
     
     def get_lexem(self):
         if self.ind == "$":
@@ -67,8 +160,10 @@ class Calculator:
             return Sign.pw
         elif self.formula[self.ind] == "x" or self.formula[self.ind] == "y":
             return Sign.variable
-        else:
+        elif self.formula[self.ind].isdigit():
             return Sign.number
+        else:
+            return Sign.function
 
     
     def element(self):
@@ -79,15 +174,17 @@ class Calculator:
             return res
         elif self.get_lexem() == Sign.variable:
             return self.variable_value()
-        else:
+        elif self.get_lexem() == Sign.number:
             return self.str_to_number()
+        else:
+            return self.func()
 
         
     def exponentiation(self):
         res = self.element()
         while self.get_lexem() == Sign.pw:
             self.ind += 1
-            res **= self.exponentiation()
+            res **= self.element()
         return res
     
 
@@ -96,10 +193,10 @@ class Calculator:
         while self.get_lexem() == Sign.mul or self.get_lexem() == Sign.div:
             if self.get_lexem() == Sign.mul:
                 self.ind += 1
-                res *= self.multiplication()
+                res *= self.exponentiation()
             else:
                 self.ind += 1
-                res /= self.multiplication()
+                res /= self.exponentiation()
         return res
 
 
