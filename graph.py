@@ -56,79 +56,49 @@ class Calculator:
             name += self.formula[self.ind]
             self.ind += 1
         if name == "sin":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.sin(math.radians(res))
         elif name == "cos":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.cos(math.radians(res))
         elif name == "tg":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.tan(math.radians(res))
         elif name == "ctg":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return 1 / math.tan(math.radians(res))
         elif name == "sec":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return 1 / math.sin(math.radians(res))
         elif name == "cosec":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return 1 / math.cos(math.radians(res))
         elif name == "arcsin":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.degrees(math.asin(res))
         elif name == "arccos":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.degrees(math.acos(res))
         elif name == "arctg":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.degrees(math.atan(res))
         elif name == "arcctg":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.degrees(math.atan(1 / res))
         elif name == "log2":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.log2(res)
         elif name == "log10":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.log10(res)
         elif name == "loge":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.log1p(res - 1)
         elif name == "exp":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.exp(res)
         elif name == "sqrt":
-            self.ind += 1
-            res = self.addition()
-            self.ind += 1
+            res = self.element()
             return math.sqrt(res)
     
     def get_lexem(self):
@@ -150,10 +120,10 @@ class Calculator:
             return Sign.pw
         elif self.formula[self.ind] == "x" or self.formula[self.ind] == "y":
             return Sign.variable
-        elif self.formula[self.ind].isdigit():
-            return Sign.number
-        else:
+        elif self.formula[self.ind].isalpha():
             return Sign.function
+        else:
+            return Sign.number
 
     
     def element(self):
@@ -164,7 +134,7 @@ class Calculator:
             return res
         elif self.get_lexem() == Sign.variable:
             return self.variable_value()
-        elif self.get_lexem() == Sign.number:
+        elif (self.get_lexem() == Sign.number) or (self.get_lexem() == Sign.minus):
             return self.str_to_number()
         else:
             return self.func()
