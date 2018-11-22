@@ -1,5 +1,6 @@
 from enum import Enum
 import math
+from tkinter import *
 
 
 class Sign(Enum):
@@ -21,6 +22,22 @@ class Calculator:
         self.variables = dict()
         self.formula = ""
         self.ind = 0
+        self.master = Tk()
+        self.master.geometry("600x400")
+        self.button = Button(self.master, text = "deem", width = 10, height = 2,
+                        bg = "green", fg = "red", activebackground = "green",
+                        command = self.clicked)
+        self.button.place(x = 250,y = 25)
+        self.entry = Entry(self.master)
+        self.entry.place(x = 250, y = 0)
+        self.label = Label(self.master, text = "")
+        self.label.place(x = 250, y = 60)
+        self.master.mainloop()
+
+
+    def clicked(self):
+        fr = self.entry.get()
+        self.label.configure(text = str(self.calc(fr)))
 
         
     def digit(self):
@@ -57,7 +74,7 @@ class Calculator:
             self.ind += 1
         if name == "sin":
             res = self.element()
-            return math.sin(math.radians(res))
+            return math.sin(res)
         elif name == "cos":
             res = self.element()
             return math.cos(math.radians(res))
@@ -84,6 +101,8 @@ class Calculator:
             return math.degrees(math.atan(res))
         elif name == "arcctg":
             res = self.element()
+            if res == 0:
+                return 90
             return math.degrees(math.atan(1 / res))
         elif name == "log2":
             res = self.element()
@@ -187,6 +206,7 @@ class Calculator:
             for i in range(n):
                 name, f = input().split(" = ")
                 d[name] = float(self.calc(f))
+                print(d[name])
         self.variables = d
         self.formula = fr
         self.formula += "$"
@@ -194,7 +214,7 @@ class Calculator:
         return self.addition()
 
 
+
 clcltr = Calculator()
-while 1:
-    fr = input()
-    print(clcltr.calc(fr))
+
+
